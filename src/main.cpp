@@ -9,11 +9,10 @@
  */
 #include <Arduino.h>
 #include "AES/aesmanagement.hpp"
+#include "LoRa/loramanager.hpp"
+// #include <MKRWAN_v2.h>
 
 #define BUAD_RATE       9600
-
-
-static void phex(uint8_t* str); // Print Hex
 
 
 /**
@@ -29,9 +28,67 @@ void setup()
     Serial.begin(BUAD_RATE);
     delay(10);
   }
+  Serial.println("STARTING AES ENCRYPTION");
 
   // AES Settings
+  KEY = toUINT(AES_ROOT_KEY, 16);
+  IV  =   toUINT(AES_IV_KEY, 16);
   AES_init_ctx_iv(&ctx, KEY, IV); // initilizing the CTX environment
+
+  // Print Key
+  Serial.println("\n\nKey: ");
+  for (int i = 0; i < 16; i++)
+  {
+    Serial.print((char) KEY[i], HEX);
+  }
+
+  // Print IV
+  Serial.println("\n\nIV: ");
+  for (int i = 0; i < 16; i++)
+  {
+    Serial.print((char) IV[i], HEX);
+  }
+  Serial.println("\n\n");
+
+  // Lora Send Message
+  beginLoRa(USA_915);     // Begin LoRa Module
+  // dumpLoRaRegisters();
+
+  // 
+  String SMSG = SECRET_MESSAGE;
+  delay(100);
+  sendLoRaMessage("Sending Encrypted Text:");
+  uint8_t * secretMessage = toUINT(SECRET_MESSAGE, strlen(SECRET_MESSAGE));
+  secretMessage = padValues(secretMessage, strlen(SECRET_MESSAGE));
+  AES_CBC_encrypt_buffer(&ctx, secretMessage, strlen(SECRET_MESSAGE) + padLength(strlen(SECRET_MESSAGE)));
+
+  // Encrypted String
+  Serial.print("Message Length: ");
+  Serial.println(strlen(SECRET_MESSAGE) + padLength(strlen(SECRET_MESSAGE)));
+  Serial.println("Sending This Message: ");
+  for (uint32_t i = 0; i < strlen(SECRET_MESSAGE) + padLength(strlen(SECRET_MESSAGE)); i++)
+  {
+    Serial.print((char) secretMessage[i], HEX);
+    if (i < SMSG.length())
+    {
+      SMSG[i] = (char) secretMessage[i];
+    }
+    else
+    {
+      SMSG = SMSG + (char) secretMessage[i];
+    }
+  }
+  Serial.println("\n\n\n");
+
+
+  Serial.print("Encrypted Text Length: ");
+  Serial.print(SMSG.length());
+  Serial.println("\n\n\n");
+  Serial.println("Regular Output:");
+  Serial.println(SMSG);
+
+  // Send the Encrypted Text
+  sendLoRaMessage(SMSG);
 }
 
 /**
@@ -40,16 +97,5 @@ void setup()
  * 
  */
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// prints string as hex
-static void phex(uint8_t* str)
-{
-    uint8_t len = 16;
-
-    unsigned char i;
-    for (i = 0; i < len; ++i)
-        Serial.print(str[i], HEX);
-    Serial.print("\n");
+  // Loop 
 }

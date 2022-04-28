@@ -12,11 +12,11 @@
 #define AESMANAGEMENT_HPP_
 
 #include "aes.hpp"
+#include "secrets.hpp"
 
 // AES Default Values
-// Change the value of the KEY and the IV
-uint8_t   KEY[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
-uint8_t    IV[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
+uint8_t * KEY;
+uint8_t *  IV;
 struct AES_ctx ctx;
 
 // Functions that are associated with the AES padding
@@ -108,4 +108,94 @@ uint8_t * removePad(char * address, uint32_t length)
     return removePad((uint8_t *) address, length);
 }
 
+/**
+ * @brief 
+ * Hexify single character values
+ * 
+ * @param a 
+ * @return uint8_t* 
+ */
+uint8_t * hexify(const char * a)
+{
+    if (strlen(a) <= 16)
+    {
+        uint8_t * output = new uint8_t[16];
+        uint8_t * temp = padValues((char *)a, strlen(a));
+        for (int i = 0; i < 16; i++)
+        {
+            if (temp[i] > 0x2F && temp[i] < 0x3A)
+            {
+                output[i] = temp[i] - 0x30;
+            }
+
+            else if (temp[i] > 0x40 && temp[i] < 0x47)
+            {
+                output[i] = temp[i] - 0x37;
+            }
+            
+            else if (temp[i] > 0x60 && temp[i] < 0x67)
+            {
+                output[i] = temp[i] - 0x57;
+            }
+
+            else
+            {
+                output[i] = 0x00;
+                continue;
+            }
+        }
+        return output;
+    }
+
+    else
+    {
+        return ((uint8_t *) a);
+    }
+}
+
+/**
+ * @brief 
+ * Converts uint8_t array (pointer) into a char array (pointer)
+ * 
+ * @param address 
+ * @param length 
+ * @return char* 
+ */
+char * toChar(uint8_t * address, uint32_t length)
+{
+    char * output = new char[length];
+    for (uint32_t i = 0; i < length; i++)
+    {
+        output[i] = (char) address[i];
+    }
+    return output;
+}
+
+/**
+ * @brief 
+ * 
+ * @param text 
+ * @param length 
+ * @return uint8_t* 
+ */
+uint8_t * toUINT(const char * text, uint32_t length)
+{
+    uint8_t * output = new uint8_t[length];
+    for (uint32_t i = 0; i < length; i++)
+    {
+        output[i] = (uint8_t) text[i];
+    }
+    return output;
+}
+
+/**
+ * @brief 
+ * 
+ * @param length 
+ * @return uint32_t 
+ */
+uint32_t padLength(const uint32_t length)
+{
+    return 16 - (length % 16);
+}
 #endif
