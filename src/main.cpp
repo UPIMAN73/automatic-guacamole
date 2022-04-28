@@ -14,6 +14,7 @@
 
 #define BUAD_RATE       9600
 
+#define LORA_SENDER     1 // Defines a particular mode to allow the device to choose its particular role
 
 /**
  * @brief 
@@ -54,7 +55,8 @@ void setup()
   beginLoRa(USA_915);     // Begin LoRa Module
   // dumpLoRaRegisters();
 
-  // 
+  // LoRa Senderr
+  #ifdef LORA_SENDER
   String SMSG = SECRET_MESSAGE;
   delay(100);
   sendLoRaMessage("Sending Encrypted Text:");
@@ -89,6 +91,8 @@ void setup()
 
   // Send the Encrypted Text
   sendLoRaMessage(SMSG);
+
+  #endif
 }
 
 /**
@@ -98,4 +102,24 @@ void setup()
  */
 void loop() {
   // Loop 
+
+  #ifndef LORA_SENDER
+  if (parseLoRaPacket())
+  {
+    String SMSG = readLoRaPacket();
+    delay(100);
+    uint8_t * secretMessage = toUINT(SMSG.c_str() , SMSG.length());
+    AES_CBC_decrypt_buffer(&ctx, secretMessage, SMSG.length());
+
+    // Encrypted String
+    secretMessage = removePad(secretMessage, SMSG.length());
+    const char * msg = toChar(secretMessage, strlen((char *) secretMessage));
+    String outputText = String(msg);
+    Serial.print("Message Length: ");
+    Serial.println(outputText.length());
+    Serial.println("Recieved This Message: ");
+    Serial.println(outputText);
+    Serial.println("\n\n\n");
+  }
+  #endif
 }

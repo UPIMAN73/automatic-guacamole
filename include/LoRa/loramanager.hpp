@@ -156,4 +156,50 @@ void sendLoRaMessage(const char * message)
     LoRa.println(message);
     LoRa.endPacket();
 }
+
+
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int parseLoRaPacket()
+{
+    return LoRa.parsePacket();
+}
+
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int LoRaPacketAvailable()
+{
+    return LoRa.available();
+}
+
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int readLoRaValue()
+{
+    return LoRa.read();
+}
+
+/**
+ * @brief 
+ * 
+ * @return String 
+ */
+String readLoRaPacket()
+{
+    String message = "";
+    while (LoRa.available())
+    {
+        message += (char) LoRa.read();
+    }
+    return message;
+}
 #endif
