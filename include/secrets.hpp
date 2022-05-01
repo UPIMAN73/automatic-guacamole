@@ -1,3 +1,12 @@
+/**
+ * @file secrets.hpp
+ * @author Joshua Calzadillas
+ * @brief 
+ * @version 0.1
+ * @date 2022-04-29
+ * 
+ * 
+ */
 #ifndef SECRETS_HPP_
 #define SECRETS_HPP_
 

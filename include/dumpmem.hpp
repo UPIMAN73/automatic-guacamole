@@ -1,3 +1,12 @@
+/**
+ * @file dumpmem.hpp
+ * @author Joshua Calzadillas
+ * @brief 
+ * @version 0.1
+ * @date 2022-04-29
+ * 
+ * 
+ */
 #ifndef DUMPMEM_HPP_
 #define DUMPMEM_HPP_
 
