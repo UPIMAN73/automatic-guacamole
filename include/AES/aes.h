@@ -1,3 +1,4 @@
+// This library is directly taken from Tiny_AES_C from kokke
 #ifndef _AES_H_
 #define _AES_H_
 

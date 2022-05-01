@@ -1,11 +1,10 @@
 /**
  * @file aesmanagement.hpp
- * @author Joshua Calzadillas (upiman73@github.com)
+ * @author Joshua Calzadillas
  * @brief 
  * @version 0.1
  * @date 2022-04-26
  * 
- * @copyright Copyright (c) 2022
  * 
  */
 #ifndef AESMANAGEMENT_HPP_

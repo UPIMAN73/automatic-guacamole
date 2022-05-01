@@ -1,3 +1,12 @@
+/**
+ * @file loramanager.hpp
+ * @author Joshua Calzadillas 
+ * @brief 
+ * @version 0.1
+ * @date 2022-04-29
+ * 
+ * 
+ */
 #ifndef LORAMANAGER_HPP_
 #define LORAMANAGER_HPP_
 
@@ -16,7 +25,7 @@
  * 
  * @param frequency 
  */
-void beginLoRa(const uint32_t frequency)
+void beginLoRa(int frequency)
 {
     // Serial Start
     if (Serial)
@@ -30,7 +39,11 @@ void beginLoRa(const uint32_t frequency)
     // LoRa Begin Module Library
     while (!LoRa.begin(frequency))
     {
-        delay(10);
+        if (Serial)
+        {
+            Serial.println("LoRa Module not working....");
+        }
+        delay(100);
     }
 
     if (Serial)
@@ -70,7 +83,7 @@ void dumpLoRaRegisters()
  * 
  * @param frequency 
  */
-void setLoRaFrequency(const uint32_t frequency)
+void setLoRaFrequency(int frequency)
 {
     LoRa.setFrequency(frequency);
 }
@@ -80,7 +93,7 @@ void setLoRaFrequency(const uint32_t frequency)
  * 
  * @param bw 
  */
-void setLoRaBandwidth(const uint32_t bw)
+void setLoRaBandwidth(int bw)
 {
     LoRa.setSignalBandwidth(bw);
 }
@@ -110,7 +123,7 @@ void setLoRaTXPower(const int level, const int outputPin = PA_OUTPUT_PA_BOOST_PI
  * 
  * @param sf 
  */
-void setLoRaSF(const uint32_t sf)
+void setLoRaSF(const int sf)
 {
     LoRa.setSpreadingFactor(sf);
 }

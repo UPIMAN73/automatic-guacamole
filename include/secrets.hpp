@@ -1,10 +1,9 @@
 /**
  * @file secrets.hpp
- * @author Joshua Calzadillas
+ * @author Joshua Calzadillas (you@domain.com)
  * @brief 
  * @version 0.1
  * @date 2022-05-01
- * 
  * 
  */
 #ifndef SECRETS_HPP_
